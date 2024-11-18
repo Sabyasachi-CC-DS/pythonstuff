@@ -1,0 +1,28 @@
+PS C:\Users\Sabyasachi Banerjee\prac3> git config --global user.name "Sabyasachi-CC-DS"                                                                                    
+PS C:\Users\Sabyasachi Banerjee\prac3> git config --global user.email "sabyasachibanerjee1234@gmail.com"
+PS C:\Users\Sabyasachi Banerjee\prac3> git init
+Initialized empty Git repository in C:/Users/Sabyasachi Banerjee/prac3/.git/
+PS C:\Users\Sabyasachi Banerjee\prac3> git add .
+PS C:\Users\Sabyasachi Banerjee\prac3> git commit -m "initial commit"
+[master (root-commit) ae5fc25] initial commit
+ 1 file changed, 1 insertion(+)
+ create mode 100644 hi.py
+PS C:\Users\Sabyasachi Banerjee\prac3> git branch b1
+PS C:\Users\Sabyasachi Banerjee\prac3> git checkout b1
+Switched to branch 'b1'
+[b1 80e056a] second commit
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+PS C:\Users\Sabyasachi Banerjee\prac3> git checkout master
+Switched to branch 'master'
+PS C:\Users\Sabyasachi Banerjee\prac3> git add .
+PS C:\Users\Sabyasachi Banerjee\prac3> git commit -m "third commit"
+[master 48b2ba7] third commit
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+PS C:\Users\Sabyasachi Banerjee\prac3> git merge b1
+Auto-merging hi.py
+CONFLICT (content): Merge conflict in hi.py
+Automatic merge failed; fix conflicts and then commit the result.
+PS C:\Users\Sabyasachi Banerjee\prac3>
+ *  History restored 
+
+PS C:\Users\Sabyasachi Banerjee\prac3> 
