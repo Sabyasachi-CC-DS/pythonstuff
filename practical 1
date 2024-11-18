@@ -1,0 +1,78 @@
+import matplotlib.pyplot as plt
+from abc import ABC, abstractmethod
+
+class BioData(ABC):
+    def __init__(self, name, data):
+        self.name = name
+        self.data = data
+
+    @abstractmethod
+    def analyze(self):
+        pass
+
+    @abstractmethod
+    def visualize(self):
+        pass
+
+class ProteinSequence(BioData):
+    def __init__(self, name, sequence):
+        super().__init__(name, sequence)
+
+    def analyze(self):
+        return {"length": len(self.data), "unique_amino_acid": len(set(self.data))}
+
+    def visualize(self):
+        amino_acid_count = {aa: self.data.count(aa) for aa in set(self.data)}
+        plt.bar(amino_acid_count.keys(), amino_acid_count.values())
+        plt.title(f"Amino Acid Distribution for {self.name}")
+        plt.show()
+
+class GeneExpression(BioData):
+    def __init__(self, name, expression_data):
+        super().__init__(name, expression_data)
+
+    def analyze(self):
+        return {"max_expression": max(self.data), "min_expression": min(self.data)}
+
+    def visualize(self):
+        plt.plot(self.data)
+        plt.title(f"Gene Expression for {self.name}")
+        plt.xlabel("Time")
+        plt.ylabel("Expression Level")
+        plt.show()
+
+def main():
+    while True:
+        print("Choose an option:")
+        print("1. Analyze Protein Sequence")
+        print("2. Analyze Gene Expression Data")
+        print("3. Exit")
+
+        choice = input("Enter your choice (1/2/3): ")
+
+        if choice == '1':
+            name = input("Enter the name of the protein: ")
+            sequence = input("Enter the protein sequence: ")
+            protein = ProteinSequence(name, sequence)
+            analysis = protein.analyze()
+            print(f"Analysis of {name}: {analysis}")
+            protein.visualize()
+
+        elif choice == '2':
+            name = input("Enter the name of the gene: ")
+            expression_data = input("Enter the gene expression data (comma-separated values): ")
+            expression_data = list(map(int, expression_data.split(',')))
+            gene_expression = GeneExpression(name, expression_data)
+            analysis = gene_expression.analyze()
+            print(f"Analysis of {name}: {analysis}")
+            gene_expression.visualize()
+
+        elif choice == '3':
+            print("Exiting the program.")
+            break
+
+        else:
+            print("Invalid choice. Please choose again.")
+
+if __name__ == "__main__":
+    main()
