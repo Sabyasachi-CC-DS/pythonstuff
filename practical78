@@ -1,0 +1,129 @@
+on command prompt
+docker init
+docker pull ubuntu 
+run -it ubuntu
+ls
+mkdir ghghg
+cd ghghgh
+
+
+app.py
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello_geek():
+    return '<h1>Hello from Flask & Docker</h2>'
+
+dockerfile
+# syntax=docker/dockerfile:1
+
+FROM python:3.8-slim-buster
+
+WORKDIR /python-docker
+
+COPY requirements.txt requirements.txt
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+COPY . .
+
+CMD [ "python3", "app.py"]
+
+requirements.txt
+Flask==3.0.3
+
+or use pip freeze > requirements.txt
+
+PS C:\Users\Sabyasachi Banerjee\prac 7> docker build --t latest
+unknown flag: --t
+See 'docker buildx build --help'.
+PS C:\Users\Sabyasachi Banerjee\prac 7> docker build -t latest .
+[+] Building 6.6s (13/13) FINISHED                                                                                                                                                                                                           docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                                                                                                                                                         0.0s
+ => => transferring dockerfile: 276B                                                                                                                                                                                                                         0.0s 
+ => resolve image config for docker-image://docker.io/docker/dockerfile:1                                                                                                                                                                                    1.6s 
+ => CACHED docker-image://docker.io/docker/dockerfile:1@sha256:865e5dd094beca432e8c0a1d5e1c465db5f998dca4e439981029b3b81fb39ed5                                                                                                                              0.0s
+ => => resolve docker.io/docker/dockerfile:1@sha256:865e5dd094beca432e8c0a1d5e1c465db5f998dca4e439981029b3b81fb39ed5                                                                                                                                         0.0s 
+ => [internal] load metadata for docker.io/library/python:3.8-slim-buster                                                                                                                                                                                    4.1s
+ => [internal] load .dockerignore                                                                                                                                                                                                                            0.0s
+ => => transferring context: 2B                                                                                                                                                                                                                              0.0s 
+ => [1/6] FROM docker.io/library/python:3.8-slim-buster@sha256:8799b0564103a9f36cfb8a8e1c562e11a9a6f2e3bb214e2adc23982b36a04511                                                                                                                              0.0s 
+ => => resolve docker.io/library/python:3.8-slim-buster@sha256:8799b0564103a9f36cfb8a8e1c562e11a9a6f2e3bb214e2adc23982b36a04511                                                                                                                              0.0s 
+ => [internal] load build context                                                                                                                                                                                                                            0.0s 
+ => => transferring context: 93B                                                                                                                                                                                                                             0.0s 
+ => CACHED [2/6] WORKDIR /python-docker                                                                                                                                                                                                                      0.0s 
+ => CACHED [3/6] COPY requirements.txt requirements.txt                                                                                                                                                                                                      0.0s 
+ => CACHED [4/6] RUN pip install --upgrade pip                                                                                                                                                                                                               0.0s 
+ => CACHED [5/6] RUN pip install -r requirements.txt                                                                                                                                                                                                         0.0s
+ => CACHED [6/6] COPY . .                                                                                                                                                                                                                                    0.0s 
+ => exporting to image                                                                                                                                                                                                                                       0.3s 
+ => => exporting layers                                                                                                                                                                                                                                      0.0s 
+ => => exporting manifest sha256:c2f2f93b6f214c1179e82344593c0ee95285738ca6d768fded59d2bb83afb96d                                                                                                                                                            0.0s 
+ => => exporting config sha256:d619b8657e05b8e32bee7f7d54303e9b45392b58e03f7a82565a9c6ab79d68f3                                                                                                                                                              0.0s 
+ => => exporting attestation manifest sha256:ee661886c208a2df774bb6272587ed510983442a7659f6d99e36786e4688121e                                                                                                                                                0.2s 
+ => => exporting manifest list sha256:55ae85283149de84f8fae6bb52a8c7b08668da9e270c47592c5895e2e568fbd9                                                                                                                                                       0.0s 
+ => => naming to docker.io/library/latest:latest                                                                                                                                                                                                             0.0s 
+ => => unpacking to docker.io/library/latest:latest                                                                                                                                                                                                          0.0s 
+PS C:\Users\Sabyasachi Banerjee\prac 7> docker images
+REPOSITORY     TAG       IMAGE ID       CREATED              SIZE
+latest         latest    55ae85283149   About a minute ago   212MB
+<none>         <none>    f7bfb0bc9416   About a minute ago   212MB
+prac7-server   latest    b3be2df73794   3 days ago           201MB
+PS C:\Users\Sabyasachi Banerjee\prac 7> docker run latest
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 130-746-572
+PS C:\Users\Sabyasachi Banerjee\prac 7> docker tag latest:latest
+"docker tag" requires exactly 2 arguments.
+See 'docker tag --help'.
+
+Usage:  docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
+
+Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+PS C:\Users\Sabyasachi Banerjee\prac 7> docker tag latest themusicmeister123/dockerprac7
+PS C:\Users\Sabyasachi Banerjee\prac 7> docker push themusicmeister123/dockerprac7:latest
+The push refers to repository [docker.io/themusicmeister123/dockerprac7]
+276dfcf5deff: Pushing [============================>                      ]  1.802MB/3.138MB
+824416e23423: Pushing [================================================>  ]  2.687MB/2.781MB
+8f777578c172: Pushing [=======>                                           ]  1.933MB/12.89MB
+d040a67e626c: Pushing [==================================================>]  2.157MB/2.157MB
+edeae36061fc: Pushed
+da5db978103f: Pushed
+8b91b88d5577: Pushing [===>                                               ]  1.802MB/27.14MB
+954cf998d81e: Pushed
+d8e09414a79c: Pushing [===============>                                   ]  1.966MB/6.213MB
+cbfea27109a8: Pushed
+c3d25e1fc7bd: Pushed
+failed to copy: unexpected status from PUT request to https://registry-1.docker.io/v2/themusicmeister123/dockerprac7/blobs/uploads/1a56f5f1-33d6-4326-91de-6d69a27cfc44?_state=R_A2mbNffwZgTLzesAT3ht13iz4d70HRjefPShhUNjt7Ik5hbWUiOiJ0aGVtdXNpY21laXN0ZXIxMjMvZG9ja2VycHJhYzciLCJVVUlEIjoiMWE1NmY1ZjEtMzNkNi00MzI2LTkxZGUtNmQ2OWEyN2NmYzQ0IiwiT2Zmc2V0IjowLCJTdGFydGVkQXQiOiIyMDI0LTExLTE1VDE1OjM4OjE5LjI4NTkxNDExNFoifQ%3D%3D&digest=sha256%3Ad8e09414a79c4a7536abcdb7d974aea1995425fddca1429ed0fea8c386ab6a19: 400 Bad request   
+PS C:\Users\Sabyasachi Banerjee\prac 7> docker push themusicmeister123/dockerprac7:latest 
+The push refers to repository [docker.io/themusicmeister123/dockerprac7]
+cbfea27109a8: Layer already exists
+8b91b88d5577: Pushing [==>                                                ]  1.606MB/27.14MB
+824416e23423: Pushing [==========================>                        ]  1.475MB/2.781MB
+failed to copy: unexpected status from PUT request to https://registry-1.docker.io/v2/themusicmeister123/dockerprac7/blobs/uploads/8b56709f-fd4c-41f2-aa12-064d7509860c?_state=RdLfhklTKAYnTfyTTwxhB4JwQsneB5nukf-IFwKS2u97Ik5hbWUiOiJ0aGVtdXNpY21laXN0ZXIxMjMvZG9ja2VycHJhYzciLCJVVUlEIjoiOGI1NjcwOWYtZmQ0Yy00MWYyLWFhMTItMDY0ZDc1MDk4NjBjIiwiT2Zmc2V0IjowLCJTdGFydGVkQXQiOiIyMDI0LTExLTE1VDE1OjQxOjE1LjA2MTUyOTQ1OVoifQ%3D%3D&digest=sha256%3A276dfcf5deffff3c5d540a8e0d9a18656a4c03637a8b4f4eec1f4a147799c901: 400 Bad request   
+PS C:\Users\Sabyasachi Banerjee\prac 7> docker push themusicmeister123/dockerprac7:latest
+The push refers to repository [docker.io/themusicmeister123/dockerprac7]
+edeae36061fc: Already exists
+cbfea27109a8: Layer already exists
+8b91b88d5577: Pushed
+d040a67e626c: Pushed
+954cf998d81e: Layer already exists
+c3d25e1fc7bd: Layer already exists
+da5db978103f: Layer already exists
+d8e09414a79c: Pushed
+8f777578c172: Layer already exists
+276dfcf5deff: Pushed
+824416e23423: Pushed
+latest: digest: sha256:55ae85283149de84f8fae6bb52a8c7b08668da9e270c47592c5895e2e568fbd9 size: 856
+PS C:\Users\Sabyasachi Banerjee\prac 7> docker pull themusicmeister123/dockerprac7:latest
+latest: Pulling from themusicmeister123/dockerprac7
+Digest: sha256:55ae85283149de84f8fae6bb52a8c7b08668da9e270c47592c5895e2e568fbd9
+Status: Image is up to date for themusicmeister123/dockerprac7:latest
+docker.io/themusicmeister123/dockerprac7:latest
+PS C:\Users\Sabyasachi Banerjee\prac 7> 
