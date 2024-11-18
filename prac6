@@ -1,0 +1,157 @@
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import ttk
+import mysql.connector
+from datetime import datetime
+
+# Database connection
+def connect_db():
+    return mysql.connector.connect(
+        host="localhost",
+        user="root",  # Replace with your MySQL username
+        password="Gardenia@506",  # Replace with your MySQL password
+        database="blood_bank"
+    )
+
+# Function to add a donation
+def add_donation():
+    def submit():
+        name = name_entry.get()
+        age = age_entry.get()
+        gender = gender_var.get()
+        blood_type = blood_type_var.get()
+        contact_info = contact_entry.get()
+        quantity = quantity_entry.get()
+
+        if not name or not age or not blood_type or not contact_info or not quantity:
+            messagebox.showerror("Error", "All fields are required!")
+            return
+
+        try:
+            connection = connect_db()
+            cursor = connection.cursor()
+
+            # Insert into donors
+            cursor.execute(
+                "INSERT INTO donors (name, age, gender, blood_type, contact_info, last_donation_date) "
+                "VALUES (%s, %s, %s, %s, %s, %s)",
+                (name, int(age), gender, blood_type, contact_info, datetime.today().date())
+            )
+
+            # Update inventory
+            cursor.execute(
+                "UPDATE blood_inventory SET quantity = quantity + %s WHERE blood_type = %s",
+                (int(quantity), blood_type)
+            )
+            connection.commit()
+            connection.close()
+            messagebox.showinfo("Success", "Donation added successfully!")
+            add_window.destroy()
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+
+    # Tkinter window for adding donation
+    add_window = tk.Toplevel(root)
+    add_window.title("Add Donation")
+
+    tk.Label(add_window, text="Name").grid(row=0, column=0, padx=10, pady=10)
+    name_entry = tk.Entry(add_window)
+    name_entry.grid(row=0, column=1, padx=10, pady=10)
+
+    tk.Label(add_window, text="Age").grid(row=1, column=0, padx=10, pady=10)
+    age_entry = tk.Entry(add_window)
+    age_entry.grid(row=1, column=1, padx=10, pady=10)
+
+    tk.Label(add_window, text="Gender").grid(row=2, column=0, padx=10, pady=10)
+    gender_var = tk.StringVar()
+    ttk.Combobox(add_window, textvariable=gender_var, values=["Male", "Female"]).grid(row=2, column=1, padx=10, pady=10)
+
+    tk.Label(add_window, text="Blood Type").grid(row=3, column=0, padx=10, pady=10)
+    blood_type_var = tk.StringVar()
+    ttk.Combobox(
+        add_window, textvariable=blood_type_var,
+        values=["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
+    ).grid(row=3, column=1, padx=10, pady=10)
+
+    tk.Label(add_window, text="Contact Info").grid(row=4, column=0, padx=10, pady=10)
+    contact_entry = tk.Entry(add_window)
+    contact_entry.grid(row=4, column=1, padx=10, pady=10)
+
+    tk.Label(add_window, text="Quantity").grid(row=5, column=0, padx=10, pady=10)
+    quantity_entry = tk.Entry(add_window)
+    quantity_entry.grid(row=5, column=1, padx=10, pady=10)
+
+    tk.Button(add_window, text="Submit", command=submit).grid(row=6, column=0, columnspan=2, pady=10)
+
+# Function to display inventory
+def view_inventory():
+    connection = connect_db()
+    cursor = connection.cursor()
+    cursor.execute("SELECT blood_type, quantity FROM blood_inventory")
+    rows = cursor.fetchall()
+    connection.close()
+
+    inventory_window = tk.Toplevel(root)
+    inventory_window.title("Blood Inventory")
+
+    tk.Label(inventory_window, text="Blood Type").grid(row=0, column=0, padx=10, pady=10)
+    tk.Label(inventory_window, text="Quantity").grid(row=0, column=1, padx=10, pady=10)
+
+    for i, row in enumerate(rows):
+        tk.Label(inventory_window, text=row[0]).grid(row=i + 1, column=0, padx=10, pady=10)
+        tk.Label(inventory_window, text=row[1]).grid(row=i + 1, column=1, padx=10, pady=10)
+
+# Function to view donors
+def view_donors():
+    connection = connect_db()
+    cursor = connection.cursor()
+    cursor.execute("SELECT name, age, gender, blood_type, last_donation_date FROM donors")
+    rows = cursor.fetchall()
+    connection.close()
+
+    donors_window = tk.Toplevel(root)
+    donors_window.title("Donors List")
+
+    tk.Label(donors_window, text="Name").grid(row=0, column=0, padx=10, pady=10)
+    tk.Label(donors_window, text="Age").grid(row=0, column=1, padx=10, pady=10)
+    tk.Label(donors_window, text="Gender").grid(row=0, column=2, padx=10, pady=10)
+    tk.Label(donors_window, text="Blood Type").grid(row=0, column=3, padx=10, pady=10)
+    tk.Label(donors_window, text="Last Donation Date").grid(row=0, column=4, padx=10, pady=10)
+
+    for i, row in enumerate(rows):
+        for j, value in enumerate(row):
+            tk.Label(donors_window, text=value).grid(row=i + 1, column=j, padx=10, pady=10)
+
+# Main Tkinter window
+root = tk.Tk()
+root.title("Blood Bank Management System")
+
+tk.Button(root, text="View Inventory", command=view_inventory).pack(pady=10)
+tk.Button(root, text="Add Donation", command=add_donation).pack(pady=10)
+tk.Button(root, text="View Donors", command=view_donors).pack(pady=10)
+
+root.mainloop()
+
+sql
+CREATE DATABASE blood_bank;
+USE blood_bank;
+
+CREATE TABLE donors (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    age INT,
+    gender VARCHAR(10),
+    blood_type ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-') NOT NULL,
+    contact_info VARCHAR(100),
+    last_donation_date DATE
+);
+
+CREATE TABLE blood_inventory (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    blood_type ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-') UNIQUE NOT NULL,
+    quantity INT NOT NULL DEFAULT 0
+);
+
+INSERT INTO blood_inventory (blood_type, quantity) VALUES
+('A+', 0), ('A-', 0), ('B+', 0), ('B-', 0),
+('AB+', 0), ('AB-', 0), ('O+', 0), ('O-', 0);
